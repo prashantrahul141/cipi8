@@ -1,6 +1,8 @@
-#include <iostream>
+#include "app.h"
+#include <cstdlib>
 
-int main() {
-  std::cout << "hello, world" << std::endl;
-  return 0;
+int main(int argc, char *argv[]) {
+  App app = App(argc, argv);
+  app.run();
+  return EXIT_SUCCESS;
 }
