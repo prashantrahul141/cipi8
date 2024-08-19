@@ -35,7 +35,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(raylib)
 
 # All source files.
-file(GLOB SOURCES src/external/log.c src/main.cpp)
+file(GLOB SOURCES src/external/log.c src/chip8.cpp src/app.cpp src/main.cpp)
 
 # include dir
 include_directories(${PROJECT_NAME} PRIVATE src/ src/external/)
