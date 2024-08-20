@@ -1,6 +1,9 @@
 #include "chip8.h"
 
-Chip8::Chip8(const char *filename) {
+Chip8::Chip8(const char *filename)
+    : rand_generator(
+          std::chrono::system_clock::now().time_since_epoch().count()) {
+
   // set pc to start of instructions.
   this->pc = 0x200;
 
@@ -11,6 +14,9 @@ Chip8::Chip8(const char *filename) {
 
   // start loading rom into vm memory.
   this->load_rom(filename);
+
+  // init rng
+  this->rand_byte = std::uniform_int_distribution<uint8_t>(0, 255U);
 }
 
 void Chip8::load_rom(const char *filename) {
@@ -36,4 +42,15 @@ void Chip8::load_rom(const char *filename) {
   }
 
   nhlog_trace("loaded rom into memory.");
+}
+
+// ======================================================
+// ================= Instructions =======================
+// ======================================================
+
+/*
+ * Clears display
+ */
+inline void Chip8::OP_00E0() {
+  memset(this->display, 0, sizeof(this->display));
 }

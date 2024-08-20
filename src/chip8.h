@@ -2,10 +2,13 @@
 #include <raylib.h>
 
 #include "external/nhlog.h"
+#include <chrono>
 #include <cstdint>
+#include <cstring>
 #include <fstream>
 #include <iosfwd>
 #include <memory>
+#include <random>
 
 const size_t ROM_START_ADDR = 0x200;
 const size_t FONT_START_ADDR = 0x50;
@@ -52,4 +55,10 @@ private:
    * Reads rom file into the vm's memory.
    */
   void load_rom(const char *filename);
+
+  void OP_00E0();
+
+private:
+  std::default_random_engine rand_generator;
+  std::uniform_int_distribution<uint8_t> rand_byte;
 };
