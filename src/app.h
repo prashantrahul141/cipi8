@@ -1,4 +1,9 @@
+#pragma once
+
+#include "chip8.h"
+#include "external/nhlog.h"
 #include <cstdlib>
+#include <filesystem>
 #include <iostream>
 
 #define USAGE "USAGE:\n\tcipi8 [filename]"

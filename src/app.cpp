@@ -1,16 +1,16 @@
 #include "app.h"
-#include "chip8.h"
-#include <filesystem>
 
 // constructor.
 App::App(int argc, char *argv[]) {
+  // no file given.
   if (argc < 2) {
-    std::cout << "No rom file given.\n" << USAGE << std::endl;
+    nhlog_error("No rom file given.");
     exit(1);
   }
 
+  // file doesnt exist
   if (!std::filesystem::exists(argv[1])) {
-    std::cout << "Given file does not exist." << std::endl;
+    nhlog_error("Given file does not exist.");
     exit(1);
   }
 
@@ -18,4 +18,4 @@ App::App(int argc, char *argv[]) {
 }
 
 // public driver
-void App::run() {}
+void App::run() { Chip8 chip8 = Chip8(this->filename); }
