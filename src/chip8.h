@@ -56,7 +56,80 @@ private:
    */
   void load_rom(const char *filename);
 
-  void OP_00E0();
+  /*
+   * Clears display
+   */
+  inline void OP_00E0();
+
+  /*
+   * Returns from a subroutine
+   */
+  inline void OP_00EE();
+
+  /*
+   * jumps pc to nnn
+   */
+  inline void OP_1nnn();
+
+  /*
+   * calls the subroutine at 2nnn
+   */
+  inline void OP_2nnn();
+
+  /*
+   * skips next instruction if Vx = kk
+   */
+  inline void OP_3xkk();
+
+  /*
+   * skips next instruction if Vx != kk
+   */
+  inline void OP_4xkk();
+
+  /*
+   * skips next instruction if Vx = Vy
+   */
+  inline void OP_5xy0();
+
+  /*
+   * sets Vx = kk
+   */
+  inline void OP_6xkk();
+
+  /*
+   * sets Vx = Vx + kk
+   */
+  inline void OP_7xkk();
+
+  /*
+   * sets Vx = Vy
+   */
+  inline void OP_8xy0();
+
+  /*
+   * sets Vx = Vx OR Vy
+   */
+  inline void OP_8xy1();
+
+  /*
+   * sets Vx = Vx AND Vy
+   */
+  inline void OP_8xy2();
+
+  /*
+   * sets Vx = Vx XOR Vy
+   */
+  inline void OP_8xy3();
+
+  /*
+   * set Vx = Vx + Vy, set VF = carry
+   */
+  inline void OP_8xy4();
+
+  /*
+   * set Vx = Vx - Vy, set VF = Not borrow
+   */
+  inline void OP_8xy6();
 
 private:
   std::default_random_engine rand_generator;

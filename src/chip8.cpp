@@ -1,4 +1,5 @@
 #include "chip8.h"
+#include <cstdint>
 
 Chip8::Chip8(const char *filename)
     : rand_generator(
@@ -49,8 +50,151 @@ void Chip8::load_rom(const char *filename) {
 // ======================================================
 
 /*
- * Clears display
+ * clears display
  */
 inline void Chip8::OP_00E0() {
-  memset(this->display, 0, sizeof(this->display));
+  std::memset(this->display, 0, sizeof(this->display));
+}
+
+/*
+ * returns from a subroutine
+ */
+inline void Chip8::OP_00EE() {
+  --this->sp;
+  this->pc = this->stack[sp];
+}
+
+/*
+ * jumps pc to nnn
+ */
+inline void Chip8::OP_1nnn() {
+  uint16_t address = this->opcode & 0x0FFFu;
+  this->pc = address;
+}
+
+/*
+ * calls the subroutine at 2nnn
+ */
+inline void Chip8::OP_2nnn() {
+  uint16_t address = this->opcode & 0x0FFFu;
+  this->stack[sp] = this->pc;
+  this->pc++;
+  this->pc = address;
+}
+
+/*
+ * skips next instruction if Vx = kk
+ */
+inline void Chip8::OP_3xkk() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  uint8_t byte = this->opcode & 0x00FFu;
+  if (this->registers[Vx] == byte) {
+    this->pc += 2;
+  }
+}
+
+/*
+ * skips next instruction if Vx != kk
+ */
+inline void Chip8::OP_4xkk() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  uint8_t byte = this->opcode & 0x00FFu;
+  if (this->registers[Vx] != byte) {
+    this->pc += 2;
+  }
+}
+
+/*
+ * skips next instruction if Vx = Vy
+ */
+inline void Chip8::OP_5xy0() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  uint8_t Vy = (this->opcode & 0x00F0u) >> 4u;
+  if (this->registers[Vx] == this->registers[Vy]) {
+    this->pc += 2;
+  }
+}
+
+/*
+ * sets Vx = kk
+ */
+inline void Chip8::OP_6xkk() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  uint8_t byte = this->opcode & 0x00FFu;
+
+  this->registers[Vx] = byte;
+}
+
+/*
+ * sets Vx = Vx + kk
+ */
+inline void Chip8::OP_7xkk() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  uint8_t byte = this->opcode & 0x00FFu;
+
+  this->registers[Vx] += byte;
+}
+
+/*
+ * sets Vx = Vy
+ */
+inline void Chip8::OP_8xy0() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  uint8_t Vy = (this->opcode & 0x00F0u) >> 4u;
+
+  this->registers[Vx] = this->registers[Vy];
+}
+
+/*
+ * sets Vx = Vx OR Vy
+ */
+inline void Chip8::OP_8xy1() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  uint8_t Vy = (this->opcode & 0x00F0u) >> 4u;
+
+  this->registers[Vx] |= this->registers[Vy];
+}
+
+/*
+ * sets Vx = Vx AND Vy
+ */
+inline void Chip8::OP_8xy2() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  uint8_t Vy = (this->opcode & 0x00F0u) >> 4u;
+
+  this->registers[Vx] &= this->registers[Vy];
+}
+
+/*
+ * sets Vx = Vx XOR Vy
+ */
+inline void Chip8::OP_8xy3() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  uint8_t Vy = (this->opcode & 0x00F0u) >> 4u;
+
+  this->registers[Vx] ^= this->registers[Vy];
+}
+
+/*
+ * set Vx = Vx + Vy, set VF = carry
+ */
+inline void Chip8::OP_8xy4() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  uint8_t Vy = (this->opcode & 0x00F0u) >> 4u;
+
+  uint16_t sum = Vx + Vy;
+
+  this->registers[0xF] = sum > 255 ? 1 : 0;
+  this->registers[Vx] = sum & 0xFFu;
+}
+
+/*
+ * set Vx = Vx - Vy, set VF = Not borrow
+ */
+inline void Chip8::OP_8xy6() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  uint8_t Vy = (this->opcode & 0x00F0u) >> 4u;
+
+  this->registers[0xF] = this->registers[Vx] > this->registers[Vy] ? 1 : 0;
+  this->registers[Vx] -= this->registers[Vy];
 }
