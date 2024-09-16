@@ -313,3 +313,64 @@ inline void Chip8::OP_Ex9E() {
     pc += 2;
   }
 }
+
+/*
+ * skip next instruction if key with the value of Vx is not pressed.
+ */
+inline void Chip8::OP_ExA1() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  uint8_t key = this->registers[Vx];
+  if (!this->keypad[key]) {
+    pc += 2;
+  }
+}
+
+/*
+ * Set Vx = delay timer value.
+ */
+inline void Chip8::OP_Fx07() {
+  uint8_t Vx = (this->opcode * 0x0F00u) >> 8u;
+  this->registers[Vx] = this->delay_timer;
+}
+
+/*
+ * Wait for a key press, store the value of the key in Vx.
+ */
+inline void Chip8::OP_Fx0A() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  if (this->keypad[0]) {
+    this->registers[Vx] = 0;
+  } else if (this->keypad[1]) {
+    this->registers[Vx] = 1;
+  } else if (this->keypad[2]) {
+    this->registers[Vx] = 2;
+  } else if (this->keypad[3]) {
+    this->registers[Vx] = 3;
+  } else if (this->keypad[4]) {
+    this->registers[Vx] = 4;
+  } else if (this->keypad[5]) {
+    this->registers[Vx] = 5;
+  } else if (this->keypad[6]) {
+    this->registers[Vx] = 6;
+  } else if (this->keypad[7]) {
+    this->registers[Vx] = 7;
+  } else if (this->keypad[8]) {
+    this->registers[Vx] = 8;
+  } else if (this->keypad[9]) {
+    this->registers[Vx] = 9;
+  } else if (this->keypad[10]) {
+    this->registers[Vx] = 10;
+  } else if (this->keypad[11]) {
+    this->registers[Vx] = 11;
+  } else if (this->keypad[12]) {
+    this->registers[Vx] = 12;
+  } else if (this->keypad[13]) {
+    this->registers[Vx] = 13;
+  } else if (this->keypad[14]) {
+    this->registers[Vx] = 14;
+  } else if (this->keypad[15]) {
+    this->registers[Vx] = 15;
+  } else {
+    this->pc -= 2;
+  }
+}

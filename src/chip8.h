@@ -171,15 +171,30 @@ private:
   inline void OP_Cxkk();
 
   /*
-   * display n-byte sprite starting at memory location I at (Vx, Vy).
+   * Display n-byte sprite starting at memory location I at (Vx, Vy).
    * set VF = collision.
    */
   inline void OP_Dxyn();
 
   /*
-   * skip next instruction if key with the value of Vx is pressed.
+   * Skip next instruction if key with the value of Vx is pressed.
    */
   inline void OP_Ex9E();
+
+  /*
+   * Skip next instruction if key with the value of Vx is not pressed.
+   */
+  inline void OP_ExA1();
+
+  /*
+   * Set Vx = delay timer value.
+   */
+  inline void OP_Fx07();
+
+  /*
+   * Wait for a key press, store the value of the key in Vx.
+   */
+  inline void OP_Fx0A();
 
 private:
   std::default_random_engine rand_generator;
