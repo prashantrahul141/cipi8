@@ -139,6 +139,48 @@ private:
    */
   inline void OP_8xy6();
 
+  /*
+   * Set Vx = Vy - Vx, set VF = NOT borrow
+   */
+  inline void OP_8xy7();
+
+  /*
+   * Set Vx = Vx SHL 1
+   */
+
+  inline void OP_8xyE();
+
+  /*
+   * Skip next instruction if Vx != Vy
+   */
+  inline void OP_9xy0();
+
+  /*
+   * Set Index = nnn;
+   */
+  inline void OP_Annn();
+
+  /*
+   * Jump to location nnn + V0
+   */
+  inline void OP_Bnnn();
+
+  /*
+   * Set Vx = random byte & KK.
+   */
+  inline void OP_Cxkk();
+
+  /*
+   * display n-byte sprite starting at memory location I at (Vx, Vy).
+   * set VF = collision.
+   */
+  inline void OP_Dxyn();
+
+  /*
+   * skip next instruction if key with the value of Vx is pressed.
+   */
+  inline void OP_Ex9E();
+
 private:
   std::default_random_engine rand_generator;
   std::uniform_int_distribution<uint8_t> rand_byte;

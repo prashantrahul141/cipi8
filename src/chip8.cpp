@@ -198,3 +198,118 @@ inline void Chip8::OP_8xy5() {
   this->registers[0xF] = this->registers[Vx] > this->registers[Vy] ? 1 : 0;
   this->registers[Vx] -= this->registers[Vy];
 }
+
+/*
+ * Set Vx = Vx SHR 1
+ */
+inline void Chip8::OP_8xy6() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  this->registers[0xF] = (this->registers[Vx] & 0x1u);
+  this->registers[Vx] >>= 1;
+}
+
+/*
+ * Set Vx = Vy - Vx, set VF = NOT borrow
+ */
+inline void Chip8::OP_8xy7() {
+  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+  uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+
+  this->registers[0xF] = this->registers[Vy] > this->registers[Vx] ? 1 : 0;
+  this->registers[Vx] = this->registers[Vy] - this->registers[Vx];
+}
+
+/*
+ * Set Vx = Vx SHL 1
+ */
+inline void Chip8::OP_8xyE() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+
+  // save msb in VF.
+  this->registers[0xF] = (this->registers[Vx] & 0x80u) >> 7u;
+  this->registers[Vx] <<= 1;
+}
+
+/*
+ * Skip next instruction if Vx != Vy
+ */
+inline void Chip8::OP_9xy0() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  uint8_t Vy = (this->opcode & 0x00F0u) >> 4u;
+
+  if (this->registers[Vx] != this->registers[Vy]) {
+    this->pc += 2;
+  }
+}
+
+/*
+ * Set Index = nnn;
+ */
+inline void Chip8::OP_Annn() {
+  uint16_t address = this->opcode & 0x0FFFu;
+  this->index = address;
+}
+
+/*
+ * Jump to location nnn + V0
+ */
+inline void Chip8::OP_Bnnn() {
+  uint16_t address = this->opcode & 0x0FFFu;
+  this->pc = this->registers[0] + address;
+}
+
+/*
+ * Set Vx = random byte & KK.
+ */
+inline void Chip8::OP_Cxkk() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  uint8_t byte = this->opcode & 0x00FFu;
+
+  this->registers[Vx] = this->rand_byte(this->rand_generator) & byte;
+}
+
+/*
+ * display n-byte sprite starting at memory location I at (Vx, Vy).
+ * set VF = collision.
+ */
+inline void Chip8::OP_Dxyn() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  uint8_t Vy = (this->opcode & 0x00F0u) >> 4u;
+  uint8_t height = this->opcode & 0x000Fu;
+
+  uint8_t xPos = this->registers[Vx] % VIDEO_WIDTH;
+  uint8_t yPos = this->registers[Vx] % VIDEO_HEIGHT;
+
+  this->registers[0xF] = 0;
+
+  for (size_t row = 0; row < height; ++row) {
+    uint8_t sprite_byte = this->memory[index + row];
+    for (unsigned int col = 0; col < 8; ++col) {
+      uint8_t sprite_pixel = sprite_byte & (0x80u >> col);
+      uint32_t *screen_pixel =
+          &this->display[(yPos + row) * VIDEO_WIDTH + (xPos + col)];
+
+      // if pixel is on
+      if (sprite_pixel) {
+        // screen pixel also on - collision
+        if (*screen_pixel == 0xFFFFFFFF) {
+          registers[0xF] = 1;
+        }
+
+        // XOR with the sprite pixel
+        *screen_pixel ^= 0xFFFFFFFF;
+      }
+    }
+  }
+}
+
+/*
+ * skip next instruction if key with the value of Vx is pressed.
+ */
+inline void Chip8::OP_Ex9E() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  uint8_t key = this->registers[Vx];
+  if (this->keypad[key]) {
+    pc += 2;
+  }
+}
