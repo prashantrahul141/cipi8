@@ -191,7 +191,7 @@ inline void Chip8::OP_8xy4() {
 /*
  * set Vx = Vx - Vy, set VF = Not borrow
  */
-inline void Chip8::OP_8xy6() {
+inline void Chip8::OP_8xy5() {
   uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
   uint8_t Vy = (this->opcode & 0x00F0u) >> 4u;
 

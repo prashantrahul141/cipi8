@@ -127,7 +127,12 @@ private:
   inline void OP_8xy4();
 
   /*
-   * set Vx = Vx - Vy, set VF = Not borrow
+   * Set Vx = Vx - Vy, set VF = NOT borrow.
+   */
+  inline void OP_8xy5();
+
+  /*
+   * Set Vx = Vx SHR 1
    */
   inline void OP_8xy6();
 
