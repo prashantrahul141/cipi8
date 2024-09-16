@@ -374,3 +374,19 @@ inline void Chip8::OP_Fx0A() {
     this->pc -= 2;
   }
 }
+
+/*
+ * Set delay timer = Vx.
+ */
+inline void Chip8::OP_Fx15() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  this->delay_timer = this->registers[Vx];
+}
+
+/*
+ * Set sound timer = Vx.
+ */
+inline void Chip8::OP_Fx18() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  this->sound_timer = this->registers[Vx];
+}

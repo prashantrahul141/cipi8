@@ -196,6 +196,16 @@ private:
    */
   inline void OP_Fx0A();
 
+  /*
+   * Set delay timer = Vx.
+   */
+  inline void OP_Fx15();
+
+  /*
+   * Set sound timer = Vx.
+   */
+  inline void OP_Fx18();
+
 private:
   std::default_random_engine rand_generator;
   std::uniform_int_distribution<uint8_t> rand_byte;
