@@ -13,6 +13,9 @@
 const size_t ROM_START_ADDR = 0x200;
 const size_t FONT_START_ADDR = 0x50;
 
+const size_t VIDEO_WIDTH = 64;
+const size_t VIDEO_HEIGHT = 32;
+
 const unsigned int FONTSET_SIZE = 80;
 const uint8_t FONTSET[FONTSET_SIZE] = {
     0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
