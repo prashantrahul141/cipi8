@@ -47,7 +47,7 @@ public:
   uint8_t delay_timer{};
   uint8_t sound_timer{};
   uint8_t keypad[16]{};
-  uint32_t display[64][32]{};
+  uint32_t display[64 * 32]{};
   uint16_t opcode;
 
 public:
