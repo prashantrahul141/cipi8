@@ -390,3 +390,56 @@ inline void Chip8::OP_Fx18() {
   uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
   this->sound_timer = this->registers[Vx];
 }
+
+/*
+ * Set I = I + Vx.
+ */
+inline void Chip8::OP_Fx1E() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  this->index += this->registers[Vx];
+}
+
+/*
+ * Set I = location of sprite for digit Vx.
+ */
+inline void Chip8::OP_Fx29() {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  uint8_t digit = this->registers[Vx];
+  this->index = FONT_START_ADDR + (5 * digit);
+}
+
+/*
+ * Store BCD representation of Vx in memory locations I, I+1, and I+2.
+ */
+inline void Chip8::OP_Fx33() {
+  uint8_t Vx = (this->opcode & 0xF00u) >> 8u;
+  uint8_t value = this->registers[Vx];
+
+  this->memory[index + 2] = value % 10;
+  value /= 10;
+
+  this->memory[index + 1] = value % 10;
+  value /= 10;
+
+  this->memory[index] = value % 10;
+}
+
+/*
+ * Store registers V0 through Vx in memory starting at location I.
+ */
+inline void Chip8::OP_Fx55() {
+  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+  for (uint8_t i = 0; i <= Vx; i++) {
+    this->memory[this->index + i] = this->registers[i];
+  }
+}
+
+/*
+ * Read registers V0 through Vx from memory starting at location I.
+ */
+inline void Chip8::OP_Fx65() {
+  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+  for (uint8_t i = 0; i <= Vx; i++) {
+    this->registers[i] = this->memory[this->index + i];
+  }
+}

@@ -206,6 +206,31 @@ private:
    */
   inline void OP_Fx18();
 
+  /*
+   * Set I = I + Vx.
+   */
+  inline void OP_Fx1E();
+
+  /*
+   * Set I = location of sprite for digit Vx.
+   */
+  inline void OP_Fx29();
+
+  /*
+   * Store BCD representation of Vx in memory locations I, I+1, and I+2.
+   */
+  inline void OP_Fx33();
+
+  /*
+   * Store registers V0 through Vx in memory starting at location I.
+   */
+  inline void OP_Fx55();
+
+  /*
+   * Read registers V0 through Vx from memory starting at location I.
+   */
+  inline void OP_Fx65();
+
 private:
   std::default_random_engine rand_generator;
   std::uniform_int_distribution<uint8_t> rand_byte;
