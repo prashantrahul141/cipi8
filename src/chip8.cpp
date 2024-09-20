@@ -45,6 +45,24 @@ void Chip8::load_rom(const char *filename) {
   nhlog_trace("loaded rom into memory.");
 }
 
+/*
+ * Functions corresponding to each instruction table
+ */
+inline void Chip8::Tabel_0() {
+
+  // We deref `this`,
+  //
+  // Access the table_0 array and get the function
+  // pointer using `opcode & 0x000Fu` as index.
+  //
+  // Deref that function pointer and then call it.
+  ((*this).*(table_0[this->opcode & 0x000Fu]))();
+}
+
+inline void Chip8::Table_8() { ((*this).*(table_8[this->opcode & 0x000Fu]))(); }
+inline void Chip8::Table_E() { ((*this).*(table_E[this->opcode & 0x000Fu]))(); }
+inline void Chip8::Table_F() { ((*this).*(table_F[this->opcode & 0x00FFu]))(); }
+
 // ======================================================
 // ================= Instructions =======================
 // ======================================================
@@ -443,3 +461,8 @@ inline void Chip8::OP_Fx65() {
     this->registers[i] = this->memory[this->index + i];
   }
 }
+
+/*
+ * does nothing, for instructions which are not supported.
+ */
+inline void Chip8::OP_NULL() {}

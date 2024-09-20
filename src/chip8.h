@@ -54,6 +54,25 @@ public:
   Chip8(const char *filename);
 
 private:
+  // c++ member function pointer syntax is diabolical
+  typedef void (Chip8::*Chip8Func)();
+
+  // consists the function pointers to simple instructions.
+  Chip8Func table[0xF + 1];
+
+  // consists the function pointers to instructions with 0.
+  Chip8Func table_0[0xE + 1];
+
+  // consists the function pointers to instructions with 8.
+  Chip8Func table_8[0xE + 1];
+
+  // consists the function pointers to instructions with E.
+  Chip8Func table_E[0xE + 1];
+
+  // consists the function pointers to instructions with F.
+  Chip8Func table_F[0x65 + 1];
+
+private:
   /*
    * Reads rom file into the vm's memory.
    */
@@ -230,6 +249,19 @@ private:
    * Read registers V0 through Vx from memory starting at location I.
    */
   inline void OP_Fx65();
+
+  /*
+   * does nothing, for instructions which are not supported.
+   */
+  inline void OP_NULL();
+
+  /*
+   * Functions corresponding to each instruction table
+   */
+  inline void Tabel_0();
+  inline void Table_8();
+  inline void Table_E();
+  inline void Table_F();
 
 private:
   std::default_random_engine rand_generator;
