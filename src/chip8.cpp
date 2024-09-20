@@ -18,6 +18,63 @@ Chip8::Chip8(const char *filename)
 
   // init rng
   this->rand_byte = std::uniform_int_distribution<uint8_t>(0, 255U);
+
+  // setup function pointers table for each type of instruction.
+  this->table[0x0] = &Chip8::Tabel_0;
+  this->table[0x1] = &Chip8::OP_1nnn;
+  this->table[0x2] = &Chip8::OP_2nnn;
+  this->table[0x3] = &Chip8::OP_3xkk;
+  this->table[0x4] = &Chip8::OP_4xkk;
+  this->table[0x5] = &Chip8::OP_5xy0;
+  this->table[0x6] = &Chip8::OP_6xkk;
+  this->table[0x7] = &Chip8::OP_7xkk;
+  this->table[0x8] = &Chip8::Table_8;
+  this->table[0x9] = &Chip8::OP_9xy0;
+  this->table[0xA] = &Chip8::OP_Annn;
+  this->table[0xB] = &Chip8::OP_Bnnn;
+  this->table[0xC] = &Chip8::OP_Cxkk;
+  this->table[0xD] = &Chip8::OP_Dxyn;
+  this->table[0xE] = &Chip8::Table_E;
+  this->table[0xF] = &Chip8::Table_F;
+
+  // by default make all function pointers in the following
+  // table point to OP_NULL.
+  for (size_t i = 0; i <= 0xE; i++) {
+    this->table_0[i] = &Chip8::OP_NULL;
+    this->table_8[i] = &Chip8::OP_NULL;
+    this->table_E[i] = &Chip8::OP_NULL;
+  }
+
+  // then overwrite the opcode indices we want to use.
+  this->table_0[0x0] = &Chip8::OP_00E0;
+  this->table_0[0xE] = &Chip8::OP_00EE;
+
+  this->table_8[0x0] = &Chip8::OP_8xy0;
+  this->table_8[0x1] = &Chip8::OP_8xy1;
+  this->table_8[0x2] = &Chip8::OP_8xy2;
+  this->table_8[0x3] = &Chip8::OP_8xy3;
+  this->table_8[0x4] = &Chip8::OP_8xy4;
+  this->table_8[0x5] = &Chip8::OP_8xy5;
+  this->table_8[0x6] = &Chip8::OP_8xy6;
+  this->table_8[0x7] = &Chip8::OP_8xy7;
+  this->table_8[0xE] = &Chip8::OP_8xyE;
+
+  this->table_E[0x1] = &Chip8::OP_ExA1;
+  this->table_E[0xE] = &Chip8::OP_Ex9E;
+
+  for (size_t i = 0; i <= 0x65; i++) {
+    this->table_F[i] = &Chip8::OP_NULL;
+  }
+
+  this->table_F[0x07] = &Chip8::OP_Fx07;
+  this->table_F[0x0A] = &Chip8::OP_Fx0A;
+  this->table_F[0x15] = &Chip8::OP_Fx15;
+  this->table_F[0x18] = &Chip8::OP_Fx18;
+  this->table_F[0x1E] = &Chip8::OP_Fx1E;
+  this->table_F[0x29] = &Chip8::OP_Fx29;
+  this->table_F[0x33] = &Chip8::OP_Fx33;
+  this->table_F[0x55] = &Chip8::OP_Fx55;
+  this->table_F[0x65] = &Chip8::OP_Fx65;
 }
 
 void Chip8::load_rom(const char *filename) {
@@ -49,7 +106,6 @@ void Chip8::load_rom(const char *filename) {
  * Functions corresponding to each instruction table
  */
 inline void Chip8::Tabel_0() {
-
   // We deref `this`,
   //
   // Access the table_0 array and get the function
