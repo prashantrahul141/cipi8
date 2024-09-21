@@ -51,7 +51,7 @@ public:
   uint16_t opcode;
 
 public:
-  Chip8(const char *filename);
+  Chip8(std::string filename);
 
   /*
    * Fetch, Decode, Execute.
@@ -81,7 +81,7 @@ private:
   /*
    * Reads rom file into the vm's memory.
    */
-  void load_rom(const char *filename);
+  void load_rom(std::string filename);
 
   /*
    * Clears display

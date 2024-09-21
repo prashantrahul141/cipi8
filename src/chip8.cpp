@@ -1,7 +1,7 @@
 #include "chip8.h"
 #include <cstdint>
 
-Chip8::Chip8(const char *filename)
+Chip8::Chip8(std::string filename)
     : rand_generator(
           std::chrono::system_clock::now().time_since_epoch().count()) {
 
@@ -100,7 +100,7 @@ void Chip8::Cycle() {
   }
 }
 
-void Chip8::load_rom(const char *filename) {
+void Chip8::load_rom(std::string filename) {
   nhlog_trace("loading rom into memory.");
   // open file
   std::ifstream file(filename, std::ios::binary | std::ios::ate);
