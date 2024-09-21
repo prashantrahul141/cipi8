@@ -101,7 +101,7 @@ void Chip8::Cycle() {
 }
 
 void Chip8::load_rom(std::string filename) {
-  nhlog_trace("loading rom into memory.");
+  nhlog_trace("loading rom...");
   // open file
   std::ifstream file(filename, std::ios::binary | std::ios::ate);
   if (!file.is_open()) {

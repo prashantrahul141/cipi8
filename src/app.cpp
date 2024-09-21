@@ -7,12 +7,12 @@ App::App(int argc, char *argv[]) {
   program.add_argument("rom_file").help("The rom file to run.").required();
   program.add_argument("--scale")
       .help("Scale of the display")
-      .default_value(10)
+      .default_value(15)
       .scan<'i', int>();
 
   program.add_argument("--delay")
       .help("Delay between CPU cycles.")
-      .default_value(1)
+      .default_value(6)
       .scan<'i', int>();
 
   try {
@@ -26,14 +26,17 @@ App::App(int argc, char *argv[]) {
   auto raw_filename = program.get<std::string>("rom_file");
 
   // if file doesnt exist
-  if (!std::filesystem::exists(raw_filename)) {
-    nhlog_error("Given file does not exist.");
+  if (!std::filesystem::exists(raw_filename) ||
+      std::filesystem::is_directory(raw_filename)) {
+    nhlog_error("Given file does not exist or is a directory.");
     exit(EXIT_FAILURE);
   }
 
   this->filename = raw_filename;
   this->delay = program.get<int>("--delay");
   this->scale = program.get<int>("--scale");
+  nhlog_info("filename=%s, delay=%d, scale=%d", raw_filename, this->delay,
+             this->scale);
 }
 
 // public driver

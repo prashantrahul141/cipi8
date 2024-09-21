@@ -75,7 +75,7 @@ else()
   target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:RELEASE>:${GCC_COMPILE_OPTIONS_RELEASE}>")
 
   # Linker flags.
-  set(GCC_LINK_OPTIONS_RELEASE "-s;-static;")
+  # set(GCC_LINK_OPTIONS_RELEASE "-s;-static;")
 
   target_link_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:RELEASE>:${GCC_LINK_OPTIONS_RELEASE}>")
 
