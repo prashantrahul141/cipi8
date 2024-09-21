@@ -20,19 +20,19 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # versions
-set(RAYLIB_VERSION "5.0")
+set(SDL_VERSION "2.30.7")
 
 # Add FetchContent module
 include(FetchContent)
 
 # FetchContent: Raylib 
 FetchContent_Declare(
-  raylib 
-  URL "https://github.com/raysan5/raylib/archive/refs/tags/${RAYLIB_VERSION}.zip"
+  SDL2
+  URL "https://github.com/libsdl-org/SDL/archive/refs/tags/release-${SDL_VERSION}.zip"
 )
 
 # download and local install 
-FetchContent_MakeAvailable(raylib)
+FetchContent_MakeAvailable(SDL2)
 
 # All source files.
 file(GLOB SOURCES src/external/nhlog.c src/chip8.cpp src/app.cpp src/main.cpp)
@@ -83,5 +83,5 @@ endif()
 
 
 # linking libs
-target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL2)
 
