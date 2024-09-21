@@ -53,6 +53,11 @@ public:
 public:
   Chip8(const char *filename);
 
+  /*
+   * Fetch, Decode, Execute.
+   */
+  void Cycle();
+
 private:
   // c++ member function pointer syntax is diabolical
   typedef void (Chip8::*Chip8Func)();

@@ -77,6 +77,29 @@ Chip8::Chip8(const char *filename)
   this->table_F[0x65] = &Chip8::OP_Fx65;
 }
 
+/*
+ * Fetch, Decode, Execute.
+ */
+void Chip8::Cycle() {
+  // fetch instruction
+  this->opcode = (this->memory[this->pc] << 8u) | (this->memory[this->pc + 1]);
+
+  // increment this before executing
+  this->pc += 2;
+
+  // decode and execute
+  ((*this).*(table[(this->opcode & 0xF000u) >> 12u]))();
+
+  // decrement delay and sound timer
+  if (this->delay_timer > 0) {
+    --delay_timer;
+  }
+
+  if (this->sound_timer > 0) {
+    --sound_timer;
+  }
+}
+
 void Chip8::load_rom(const char *filename) {
   nhlog_trace("loading rom into memory.");
   // open file
