@@ -3,17 +3,18 @@
 #include "chip8.h"
 #include "external/argparse.hpp"
 #include "external/nhlog.h"
+#include "platform.h"
 #include <cstdlib>
 #include <filesystem>
 #include <iostream>
 
-#define USAGE "USAGE:\n\tcipi8 [filename]"
-
 class App {
 public:
-  char *filename;
+  std::string filename;
+  int scale;
+  int delay;
 
 public:
   App(int argc, char *argv[]);
-  void run();
+  int run();
 };
