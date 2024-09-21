@@ -18,7 +18,7 @@ App::App(int argc, char *argv[]) {
   try {
     program.parse_args(argc, argv);
   } catch (const std::exception &err) {
-    std::cerr << err.what() << std::endl;
+    std::cerr << "Failed to parse arguments." << err.what() << std::endl;
     std::cerr << program;
     std::exit(1);
   }
@@ -31,8 +31,35 @@ App::App(int argc, char *argv[]) {
     exit(EXIT_FAILURE);
   }
 
-  this->filename = argv[1];
+  this->filename = raw_filename;
+  this->delay = program.get<int>("--delay");
+  this->scale = program.get<int>("--scale");
 }
 
 // public driver
-void App::run() { Chip8 chip8 = Chip8(this->filename); }
+int App::run() {
+  Chip8 chip8 = Chip8(this->filename);
+  Platform platform = Platform("cip8 - A Chip8 Emulator.", VIDEO_WIDTH * scale,
+                               VIDEO_HEIGHT * scale, VIDEO_WIDTH, VIDEO_HEIGHT);
+
+  int pitch = sizeof(chip8.display[0]) * VIDEO_WIDTH;
+  auto last_cycle_time = std::chrono::high_resolution_clock::now();
+  bool quit = false;
+
+  while (!quit) {
+    quit = platform.process_input(chip8.keypad);
+    auto current_time = std::chrono::high_resolution_clock::now();
+    float delta_time =
+        std::chrono::duration<float, std::chrono::milliseconds::period>(
+            current_time - last_cycle_time)
+            .count();
+
+    if (delta_time > this->delay) {
+      last_cycle_time = current_time;
+      chip8.Cycle();
+      platform.update(chip8.display, pitch);
+    }
+  }
+
+  return EXIT_SUCCESS;
+}
