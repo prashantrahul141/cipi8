@@ -82,7 +82,7 @@ Chip8::Chip8(std::string filename)
  */
 void Chip8::Cycle() {
   // fetch instruction
-  this->opcode = (this->memory[this->pc] << 8u) | (this->memory[this->pc + 1]);
+  this->opcode = (this->memory[this->pc] << 8u) | this->memory[this->pc + 1];
 
   // increment this before executing
   this->pc += 2;
@@ -175,7 +175,7 @@ inline void Chip8::OP_1nnn() {
 inline void Chip8::OP_2nnn() {
   uint16_t address = this->opcode & 0x0FFFu;
   this->stack[sp] = this->pc;
-  this->pc++;
+  this->sp++;
   this->pc = address;
 }
 
@@ -279,9 +279,9 @@ inline void Chip8::OP_8xy4() {
   uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
   uint8_t Vy = (this->opcode & 0x00F0u) >> 4u;
 
-  uint16_t sum = Vx + Vy;
+  uint16_t sum = this->registers[Vx] + this->registers[Vy];
 
-  this->registers[0xF] = sum > 255 ? 1 : 0;
+  this->registers[0xF] = sum > 255U ? 1 : 0;
   this->registers[Vx] = sum & 0xFFu;
 }
 
@@ -309,8 +309,8 @@ inline void Chip8::OP_8xy6() {
  * Set Vx = Vy - Vx, set VF = NOT borrow
  */
 inline void Chip8::OP_8xy7() {
-  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
-  uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  uint8_t Vy = (this->opcode & 0x00F0u) >> 4u;
 
   this->registers[0xF] = this->registers[Vy] > this->registers[Vx] ? 1 : 0;
   this->registers[Vx] = this->registers[Vy] - this->registers[Vx];
@@ -375,13 +375,13 @@ inline void Chip8::OP_Dxyn() {
   uint8_t height = this->opcode & 0x000Fu;
 
   uint8_t xPos = this->registers[Vx] % VIDEO_WIDTH;
-  uint8_t yPos = this->registers[Vx] % VIDEO_HEIGHT;
+  uint8_t yPos = this->registers[Vy] % VIDEO_HEIGHT;
 
   this->registers[0xF] = 0;
 
   for (size_t row = 0; row < height; ++row) {
     uint8_t sprite_byte = this->memory[index + row];
-    for (unsigned int col = 0; col < 8; ++col) {
+    for (size_t col = 0; col < 8; ++col) {
       uint8_t sprite_pixel = sprite_byte & (0x80u >> col);
       uint32_t *screen_pixel =
           &this->display[(yPos + row) * VIDEO_WIDTH + (xPos + col)];
@@ -426,7 +426,7 @@ inline void Chip8::OP_ExA1() {
  * Set Vx = delay timer value.
  */
 inline void Chip8::OP_Fx07() {
-  uint8_t Vx = (this->opcode * 0x0F00u) >> 8u;
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
   this->registers[Vx] = this->delay_timer;
 }
 
@@ -509,7 +509,7 @@ inline void Chip8::OP_Fx29() {
  * Store BCD representation of Vx in memory locations I, I+1, and I+2.
  */
 inline void Chip8::OP_Fx33() {
-  uint8_t Vx = (this->opcode & 0xF00u) >> 8u;
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
   uint8_t value = this->registers[Vx];
 
   this->memory[index + 2] = value % 10;
@@ -525,8 +525,8 @@ inline void Chip8::OP_Fx33() {
  * Store registers V0 through Vx in memory starting at location I.
  */
 inline void Chip8::OP_Fx55() {
-  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
-  for (uint8_t i = 0; i <= Vx; i++) {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  for (uint8_t i = 0; i <= Vx; ++i) {
     this->memory[this->index + i] = this->registers[i];
   }
 }
@@ -535,8 +535,8 @@ inline void Chip8::OP_Fx55() {
  * Read registers V0 through Vx from memory starting at location I.
  */
 inline void Chip8::OP_Fx65() {
-  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
-  for (uint8_t i = 0; i <= Vx; i++) {
+  uint8_t Vx = (this->opcode & 0x0F00u) >> 8u;
+  for (uint8_t i = 0; i <= Vx; ++i) {
     this->registers[i] = this->memory[this->index + i];
   }
 }
