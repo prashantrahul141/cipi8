@@ -35,7 +35,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(SDL2)
 
 # All source files.
-file(GLOB SOURCES src/external/nhlog.c src/chip8.cpp src/app.cpp src/main.cpp)
+file(GLOB SOURCES src/external/nhlog.c src/platform.cpp src/chip8.cpp src/app.cpp src/main.cpp)
 set_source_files_properties(src/external/nhlog.c PROPERTIES LANGUAGE CXX)
 
 # include dir
