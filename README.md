@@ -3,6 +3,8 @@
 Cipi is a Chip8 emulator written primarily in CXX. You can read more about Chip8 [here](https://en.wikipedia.org/wiki/CHIP-8).
 There are a total of 34 instructions taken from [here](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM).
 
+You can also download release binaries from the [releases page](https://github.com/prashantrahul141/cipi8/releases).
+
 
 ![octojam1title.ch8](./assets/meta/october.gif)
 
