@@ -2,6 +2,12 @@
 
 // constructor.
 App::App(int argc, char *argv[]) {
+#ifndef CIPI8_DEBUG_MODE
+  nhlog_set_level(NHLOG_ERROR);
+#else
+  nhlog_set_level(NHLOG_TRACE);
+#endif
+
   // parse command line arguments.
   argparse::ArgumentParser program("cipi8", "1.0.0");
   program.add_argument("rom_file").help("The rom file to run.").required();
