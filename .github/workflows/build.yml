@@ -22,8 +22,10 @@ jobs:
       - name: Checkout Project
         uses: actions/checkout@v4
 
-      - name: Build Project
+      - name: Install ninja-build tool
+        uses: seanmiddleditch/gha-setup-ninja@v5
+
+      - name: Build Project (linux)
         uses: threeal/cmake-action@v2
         with:
           generator: Ninja
-          cxx-compiler: gcc
