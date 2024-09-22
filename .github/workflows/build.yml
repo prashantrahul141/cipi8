@@ -25,7 +25,7 @@ jobs:
       - name: Install ninja-build tool
         uses: seanmiddleditch/gha-setup-ninja@v5
 
-      - name: Build Project (linux)
+      - name: Build Project
         uses: threeal/cmake-action@v2
         with:
           generator: Ninja
