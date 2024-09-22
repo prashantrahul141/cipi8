@@ -5,14 +5,16 @@ There are a total of 34 instructions taken from [here](http://devernay.free.fr/h
 
 
 ![octojam1title.ch8](./assets/meta/october.gif)
+
 _Playing octojam1title.ch8_
 
 ![space invaders](./assets/meta/spaceinvaders.gif)
+
 _Playing Space Invaders (David Winter)_
 
 ![tetris.ch8](./assets/meta/tetris.gif)
-_Playing Tetris (Fran Dachille, 1991)_
 
+_Playing Tetris (Fran Dachille, 1991)_
 
 
 ## Building
