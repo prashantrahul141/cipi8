@@ -48,7 +48,7 @@ App::App(int argc, char *argv[]) {
 // public driver
 int App::run() {
   Chip8 chip8 = Chip8(this->filename);
-  Platform platform = Platform("cip8 - A Chip8 Emulator.", VIDEO_WIDTH * scale,
+  Platform platform = Platform("cipi8 - A Chip8 Emulator.", VIDEO_WIDTH * scale,
                                VIDEO_HEIGHT * scale, VIDEO_WIDTH, VIDEO_HEIGHT);
 
   int pitch = sizeof(chip8.display[0]) * VIDEO_WIDTH;
