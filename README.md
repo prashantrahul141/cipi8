@@ -44,12 +44,12 @@ additionally you can provide `-DCMAKE_BUILD_TYPE={configuration}` to build in `D
 3. Run Ninja to build the project
 
 ```sh
-Ninja
+ninja
 ```
 You can provide `-j` flag to build in parallel
 
 ```sh
-Ninja -j 10
+ninja -j 10
 ```
 
 
