@@ -5,9 +5,6 @@ Chip8::Chip8(std::string filename)
     : rand_generator(
           std::chrono::system_clock::now().time_since_epoch().count()) {
 
-  // set pc to start of instructions.
-  this->pc = 0x200;
-
   // load fonts into memory starting at 0x50.
   for (size_t i = 0; i < FONTSET_SIZE; i++) {
     memory[FONT_START_ADDR + i] = FONTSET[i];
@@ -75,14 +72,23 @@ Chip8::Chip8(std::string filename)
   this->table_F[0x33] = &Chip8::OP_Fx33;
   this->table_F[0x55] = &Chip8::OP_Fx55;
   this->table_F[0x65] = &Chip8::OP_Fx65;
+
+  // set pc to start of instructions.
+  this->pc = 0x200;
 }
 
 /*
  * Fetch, Decode, Execute.
  */
 void Chip8::Cycle() {
+  nhlog_trace("pc=%u", this->pc);
+
   // fetch instruction
   this->opcode = (this->memory[this->pc] << 8u) | this->memory[this->pc + 1];
+
+  nhlog_trace("opcode=%u", this->opcode);
+  nhlog_trace("(this->opcode & 0xF000u) >> 12u=%u",
+              (this->opcode & 0xF000u) >> 12u);
 
   // increment this before executing
   this->pc += 2;
@@ -174,8 +180,8 @@ inline void Chip8::OP_1nnn() {
  */
 inline void Chip8::OP_2nnn() {
   uint16_t address = this->opcode & 0x0FFFu;
-  this->stack[sp] = this->pc;
-  this->sp++;
+  this->stack[this->sp] = this->pc;
+  ++this->sp;
   this->pc = address;
 }
 
