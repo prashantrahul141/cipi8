@@ -41,8 +41,8 @@ App::App(int argc, char *argv[]) {
   this->filename = raw_filename;
   this->delay = program.get<int>("--delay");
   this->scale = program.get<int>("--scale");
-  nhlog_info("filename=%s, delay=%d, scale=%d", raw_filename, this->delay,
-             this->scale);
+  nhlog_info("filename=%s, delay=%d, scale=%d", raw_filename.c_str(),
+             this->delay, this->scale);
 }
 
 // public driver
